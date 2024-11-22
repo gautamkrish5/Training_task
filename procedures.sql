@@ -39,18 +39,21 @@ select * from Products;
 
 create database fun; 
 use fun;
-DELIMITER &&
-Create function FilterProducts (Para_Price IN int)
-RETURN varchar(50);
-as ProductName varchar(50)
+DELIMITER $$
+Create function FilterProducts (Para_Price int)
+RETURNS varchar(50)
+DETERMINISTIC
+
 begin
+declare ProductName varchar(50);
   select product_name into ProductName from Products
-  where product_price> Para_Price;
+  where product_price> Para_Price order by product_price DESC LIMIT 1;
   return (ProductName);
 end $$
 delimiter ;
+DROP FUNCTION FilterProducts;
 
-call FilterProducts(20000);
+select FilterProducts(20000);
 
 
 
